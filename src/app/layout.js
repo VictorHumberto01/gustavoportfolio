@@ -1,41 +1,38 @@
-import { Geist, Geist_Mono, Unbounded, Playfair_Display } from "next/font/google";
+import { Space_Grotesk, JetBrains_Mono, Cormorant_Garamond } from "next/font/google";
 import { Analytics } from '@vercel/analytics/next';
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
-
-const playfairDisplay = Playfair_Display({
-  variable: "--font-playfair",
+const spaceGrotesk = Space_Grotesk({
+  variable: "--font-space-grotesk",
   subsets: ["latin"],
   display: "swap",
-  weight: ["400", "500", "600", "700", "800", "900"],
-  style: ["normal", "italic"],
+  weight: ["300", "400", "500", "600", "700"],
 });
 
-const unbounded = Unbounded({
-  variable: "--font-unbounded",
+const jetbrainsMono = JetBrains_Mono({
+  variable: "--font-jetbrains",
   subsets: ["latin"],
   display: "swap",
+  weight: ["300", "400", "500", "700"],
+});
+
+const cormorantGaramond = Cormorant_Garamond({
+  variable: "--font-cormorant",
+  subsets: ["latin"],
+  display: "swap",
+  weight: ["300", "400", "500", "600", "700"],
 });
 
 export const metadata = {
   title: "Gustavo Henrique França Campos",
-  description: "Estudante de Direito com foco em justiça social e transformação através do conhecimento jurídico",
+  description: "Estudante de Direito — justiça social e transformação através do conhecimento jurídico",
 };
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
+    <html lang="pt-BR">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${playfairDisplay.variable} ${unbounded.variable} antialiased`}
+        className={`${spaceGrotesk.variable} ${jetbrainsMono.variable} ${cormorantGaramond.variable} antialiased`}
       >
         {children}
         <Analytics />

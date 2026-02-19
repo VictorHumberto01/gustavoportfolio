@@ -1,329 +1,194 @@
-import React, { useState, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import SectionHeader from "@/components/SectionHeader";
+import LazyImage from "@/components/LazyImage";
+
+const spring = { type: "spring", stiffness: 300, damping: 30, mass: 0.8 };
 
 const Experiencias = () => {
   const [selectedExp, setSelectedExp] = useState(null);
-  const buttonRefs = useRef({});
-  const modalContainerRef = useRef(null);
 
-  const experiences = {
-    temas: {
-      title: "TEMAS 19 - China",
-      description: `Participei da simulação temática do tribunal militar para o extremo oriente como 
-        Juiz Henry Reimburguer da França, responsável pelo julgamento de generais do alto 
-        escalão militar japonês. Foi colocado em prática meus conhecimentos de história e 
-        geopolítica para defender os interesses do personagem que interpretei em debate.`,
-      achievements: [
-        "Desenvolvimento de retórica e argumentação jurídica",
-        "Estruturação lógica de argumentos",
-        "Identificação e contra-argumentação de falácias",
-        "Aplicação prática de conhecimentos históricos"
-      ],
+  const experiences = [
+    {
+      key: "temas",
+      title: "TEMAS 19 — China",
+      period: "Simulação Temática",
+      description: "Participei da simulação temática do tribunal militar para o extremo oriente como Juiz Henry Reimburguer da França.",
+      tags: ["Retórica", "Argumentação", "Contra-argumentação", "Conhecimentos históricos"],
       coverImage: "/experiences/temas/abertura.jpg",
       photos: [
         { url: "/experiences/temas/gustavo1.jpg", caption: "" },
         { url: "/experiences/temas/gustavo2.jpg", caption: "" },
-        { url: "/experiences/temas/gustavo3.jpg", caption: "" }
-      ]
-    },
-    quantium: {
-      title: "Consultor Jurídico - Quantium Labs",
-      description: `Atuei na área jurídica da empresa de desenvolvimento de software, elaborando e 
-        revisando contratos, termos de uso e políticas de privacidade. Contribuí para 
-        a conformidade legal das operações e proteção dos interesses da empresa.`,
-      achievements: [
-        "Elaboração de contratos de prestação de serviços",
-        "Desenvolvimento de termos de uso e políticas de privacidade",
-        "Análise e gestão de documentação jurídica"
+        { url: "/experiences/temas/gustavo3.jpg", caption: "" },
       ],
+    },
+    {
+      key: "quantium",
+      title: "Consultor Jurídico",
+      period: "Quantium Labs",
+      description: "Atuei na área jurídica da empresa de desenvolvimento de software, elaborando e revisando contratos, termos de uso e políticas.",
+      tags: ["Contratos", "Termos de uso", "Políticas de privacidade"],
       coverImage: "/experiences/quantium/banner.jpg",
       photos: [
-        { url: "/experiences/quantium/aline.jpg", caption: "Apresentação de produto na ACI" },
-      ]
-    },
-    fisk: {
-      title: "Professor de Inglês - Fisk Sete Lagoas",
-      description: `Atuei como professor de inglês durante 8 meses, desenvolvendo planos de aula e 
-        ministrando classes para alunos de diferentes faixas etárias. Contribuí para o 
-        desenvolvimento linguístico e cultural dos estudantes através de metodologias dinâmicas.`,
-      achievements: [
-        "Planejamento e execução de aulas para diferentes níveis",
-        "Acompanhamento personalizado do progresso dos alunos"
+        { url: "/experiences/quantium/aline.jpg", caption: "Apresentação na ACI" },
       ],
+    },
+    {
+      key: "fisk",
+      title: "Professor de Inglês",
+      period: "Fisk Sete Lagoas — 8 meses",
+      description: "Atuei como professor de inglês, desenvolvendo planos de aula e ministrando classes para alunos de diferentes faixas etárias.",
+      tags: ["Planejamento", "Acompanhamento"],
       coverImage: "/experiences/professoringles/banneringles.png",
-      photos: [
-        { url: "/experiences/fisk1.jpg", caption: "Sala de aula" },
-        { url: "/experiences/fisk2.jpg", caption: "Atividades em grupo" }
-      ]
+      photos: [],
     },
-    liga: {
-      title: "1ª Liga Acadêmica de Direito Penal",
-      description: `Lidero o processo contínuo da primeira Liga Acadêmica de Direito Penal da instituição AFYA, 
-        um espaço dedicado ao aprofundamento de estudos e pesquisas na área criminal. Desde sua 
-        criação, a Liga já reuniu diversos alunos e professores em torno de debates e produções acadêmicas.`,
-      achievements: [
-        "Organização regular de grupos de estudo e simulações de júri",
-        "Desenvolvimento do periódico para publicação de artigos científicos",
-        "Encontros semanais com participação ativa de professores e alunos"
-      ],
+    {
+      key: "liga",
+      title: "Liga Acadêmica de Direito Penal",
+      period: "1ª Liga — AFYA",
+      description: "Lidero a primeira Liga Acadêmica de Direito Penal da instituição AFYA, dedicada ao aprofundamento na área criminal.",
+      tags: ["Grupos de estudo", "Simulações de júri", "Publicação de artigos"],
       coverImage: "/experiences/liga/logo.jpeg",
-      photos: [
-        { url: "/experiences/liga1.jpg", caption: "Simulação de júri" },
-        { url: "/experiences/liga2.jpg", caption: "Grupo de estudos" }
-      ]
-    }
-  };
-
-  const cardVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { 
-      opacity: 1, 
-      y: 0,
-      transition: { duration: 0.6 }
-    }
-  };
-
-  // Enhanced iOS-like spring animation
-  const springTransition = {
-    type: "spring",
-    stiffness: 300,
-    damping: 30
-  };
-
-  // Get the exact position and size of the button for the morphing animation
-  const getButtonRect = (key) => {
-    if (!buttonRefs.current[key]) return { top: 0, left: 0, width: 0, height: 0 };
-    
-    const rect = buttonRefs.current[key].getBoundingClientRect();
-    const scrollY = window.scrollY;
-    
-    return {
-      top: rect.top + scrollY,
-      left: rect.left,
-      width: rect.width,
-      height: rect.height,
-      x: rect.x,
-      y: rect.y
-    };
-  };
-
-  const handleOpenExp = (key) => {
-    const buttonRect = getButtonRect(key);
-    
-    // Calculate scroll position to ensure animation starts from visible area
-    const scrollY = window.scrollY;
-    
-    setSelectedExp({ 
-      key, 
-      buttonRect: {
-        ...buttonRect,
-        top: buttonRect.top - scrollY,
-        scrollY
-      }
-    });
-  };
-
-  const handleCloseExp = () => {
-    // Update button position before animation starts
-    if (selectedExp) {
-      const updatedRect = getButtonRect(selectedExp.key);
-      setSelectedExp(prev => ({ 
-        ...prev, 
-        buttonRect: {
-          ...updatedRect,
-          top: updatedRect.top - window.scrollY,
-          scrollY: window.scrollY
-        }
-      }));
-    }
-    
-    // Add a slight delay to allow the update to take effect
-    setTimeout(() => {
-      setSelectedExp(null);
-    }, 50);
-  };
-
-  const renderExpButton = (key) => (
-    <button
-      ref={el => buttonRefs.current[key] = el}
-      onClick={() => handleOpenExp(key)}
-      className="bg-slate-800 hover:bg-slate-700 text-amber-300 px-4 py-2 rounded-full
-        shadow-lg hover:shadow-xl transition-all duration-300 flex items-center gap-2 group"
-    >
-      Ver mais fotos
-      <svg 
-        xmlns="http://www.w3.org/2000/svg" 
-        className="h-4 w-4 transform group-hover:translate-x-1 transition-transform" 
-        fill="none" 
-        viewBox="0 0 24 24" 
-        stroke="currentColor"
-      >
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-      </svg>
-    </button>
-  );
+      photos: [],
+    },
+  ];
 
   return (
-    <section id="experiencias" className="py-24 px-6 bg-slate-800 relative">
-      <div className="container mx-auto max-w-4xl">
-        <div className="flex items-center mb-16">
-          <div className="h-px flex-grow bg-amber-300"></div>
-          <h2 className="text-4xl md:text-5xl px-6 font-serif">Experiências</h2>
-          <div className="h-px flex-grow bg-amber-300"></div>
-        </div>
-        
-        <div className="grid md:grid-cols-2 gap-8">
-          {Object.entries(experiences).map(([key, exp]) => (
+    <section id="experiencias" className="py-24 md:py-32 px-6">
+      <div className="container mx-auto max-w-5xl">
+        <SectionHeader title="Experiências" number="06" />
+
+        <div className="space-y-6">
+          {experiences.map((exp) => (
             <motion.div
-              key={key}
-              variants={cardVariants}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-              whileHover={{ y: -5 }}
-              className="bg-slate-900 rounded-lg shadow-xl overflow-hidden"
+              layoutId={`exp-container-${exp.key}`}
+              key={exp.key}
+              onClick={() => exp.photos.length > 0 && setSelectedExp(exp)}
+              className={`bg-[var(--surface)] border border-[var(--border)] rounded-[var(--radius)] p-6 md:p-8 hover:border-[var(--accent)] transition-colors duration-500 group relative overflow-hidden ${exp.photos.length > 0 ? "cursor-pointer" : ""}`}
+              whileHover={{ y: -4, backgroundColor: "var(--surface-hover)" }}
+              transition={spring}
             >
-              <div className="h-48 relative overflow-hidden">
-                <img 
-                  src={exp.coverImage}
-                  alt={exp.title}
-                  className="w-full h-full object-cover transform hover:scale-110 transition-transform duration-500"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-slate-900 to-transparent" />
-              </div>
-              <div className="p-6">
-                <h3 className="text-2xl mb-4 font-serif">{exp.title}</h3>
-                <p className="leading-relaxed mb-4">{exp.description}</p>
-                {exp.achievements && (
-                  <>
-                    <p className="text-sm text-amber-300 mb-2">Realizações:</p>
-                    <ul className="list-disc pl-5 space-y-1 text-sm opacity-80 mb-4">
-                      {exp.achievements.map((achievement, index) => (
-                        <li key={index}>{achievement}</li>
-                      ))}
-                    </ul>
-                  </>
-                )}
-                {(key !== 'fisk' && key !== 'liga') && renderExpButton(key)}
+              <div className="grid md:grid-cols-12 gap-6 md:gap-8">
+                {/* Image - fluid transition */}
+                <div className="md:col-span-4 lg:col-span-3">
+                  <motion.div
+                    className="aspect-[4/3] overflow-hidden relative rounded-[var(--radius-sm)]"
+                  >
+                    <motion.img
+                      layoutId={`exp-image-${exp.key}`}
+                      src={exp.coverImage}
+                      alt={exp.title}
+                      className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-[filter] duration-500"
+                    />
+                  </motion.div>
+                </div>
+
+                {/* Content */}
+                <div className="md:col-span-8 lg:col-span-9 flex flex-col justify-center">
+                  <div className="flex flex-col md:flex-row md:items-baseline md:justify-between gap-2 mb-3">
+                    <motion.h3 
+                      layoutId={`exp-title-${exp.key}`}
+                      className="text-2xl font-bold uppercase tracking-tight text-[var(--fg)] group-hover:text-[var(--accent)] transition-colors font-serif"
+                    >
+                      {exp.title}
+                    </motion.h3>
+                    <span className="mono text-[10px] tracking-widest text-[var(--fg-muted)] uppercase shrink-0 bg-[var(--bg)] px-2 py-1 rounded-[4px]">
+                      {exp.period}
+                    </span>
+                  </div>
+                  <motion.p 
+                     layoutId={`exp-desc-${exp.key}`}
+                     className="text-[var(--fg-dim)] text-sm leading-relaxed mb-6 font-sans max-w-2xl"
+                  >
+                    {exp.description}
+                  </motion.p>
+                  
+                  <div className="flex flex-wrap gap-2">
+                    {exp.tags.map((tag, i) => (
+                      <span
+                        key={i}
+                        className="mono text-[10px] tracking-wider text-[var(--fg-muted)] bg-[var(--bg)] border border-[var(--border)] px-3 py-1.5 rounded-full uppercase hover:border-[var(--accent)] hover:text-[var(--accent)] transition-colors"
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+
+                  {exp.photos.length > 0 && (
+                     <div className="mt-6 flex items-center gap-2 text-[var(--accent)] mono text-[10px] uppercase font-bold tracking-widest opacity-0 group-hover:opacity-100 transition-opacity transform translate-x-[-10px] group-hover:translate-x-0 duration-300">
+                        Ver galeria <span>→</span>
+                     </div>
+                  )}
+                </div>
               </div>
             </motion.div>
           ))}
         </div>
-        
-        <div className="mt-12 p-8 bg-slate-900 rounded-lg shadow-xl">
-          <h3 className="text-2xl mb-6 font-serif text-center">Competências Desenvolvidas</h3>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="bg-slate-800 p-4 rounded-lg text-center">
-              <div className="text-amber-300 text-lg font-medium">Oratória</div>
-            </div>
-            
-            <div className="bg-slate-800 p-4 rounded-lg text-center">
-              <div className="text-amber-300 text-lg font-medium">Pesquisa</div>
-            </div>
-            
-            <div className= "bg-slate-800 p-4 rounded-lg text-center">
-              <div className="text-amber-300 text-lg font-medium">Liderança</div>
-            </div>
-            
-            <div className="bg-slate-800 p-4 rounded-lg text-center">
-              <div className="text-amber-300 text-lg font-medium">Escrita</div>
-            </div>
-          </div>
-        </div>
 
+        {/* Modal */}
         <AnimatePresence>
           {selectedExp && (
-            <>
-              {/* Overlay */}
+            <div className="fixed inset-0 z-50 flex items-center justify-center p-4 md:p-10 pointer-events-none">
               <motion.div
-                className="fixed inset-0 bg-black/80 backdrop-blur-md z-50"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                onClick={handleCloseExp}
-                transition={{ duration: 0.25 }}
+                onClick={() => setSelectedExp(null)}
+                className="absolute inset-0 bg-black/90 backdrop-blur-md pointer-events-auto"
               />
-              
-              {/* The container for the morphing effect */}
-              <div className="fixed inset-0 z-50 pointer-events-none overflow-hidden" ref={modalContainerRef}>
-                {/* The morphing element */}
-                <motion.div
-                  className="absolute bg-slate-900 origin-top-left overflow-hidden shadow-2xl"
-                  initial={{
-                    borderRadius: "9999px", // Full rounded like the button
-                    x: selectedExp.buttonRect.x,
-                    y: selectedExp.buttonRect.y,
-                    width: selectedExp.buttonRect.width,
-                    height: selectedExp.buttonRect.height,
-                    opacity: 1
-                  }}
-                  animate={{
-                    borderRadius: "16px",
-                    x: window.innerWidth / 2 - window.innerWidth * 0.45,
-                    y: window.innerHeight / 2 - window.innerHeight * 0.4,
-                    width: "90vw",
-                    height: "80vh",
-                    opacity: 1
-                  }}
-                  exit={{
-                    borderRadius: "9999px",
-                    x: selectedExp.buttonRect.x,
-                    y: selectedExp.buttonRect.y,
-                    width: selectedExp.buttonRect.width,
-                    height: selectedExp.buttonRect.height,
-                    opacity: 0
-                  }}
-                  transition={springTransition}
-                >
-                  {/* The content container - fades in after the morphing */}
-                  <motion.div 
-                    className="relative w-full h-full pointer-events-auto"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ delay: 0.15, duration: 0.2 }}
-                  >
-                    <button
-                      onClick={handleCloseExp}
-                      className="absolute top-4 right-4 z-10 p-2 text-white bg-slate-800/50 hover:bg-slate-700/70 rounded-full backdrop-blur-sm hover:text-amber-300 transition-colors"
-                      aria-label="Close modal"
+              <motion.div
+                layoutId={`exp-container-${selectedExp.key}`}
+                className="w-full max-w-5xl h-[80vh] md:h-[90vh] bg-[var(--bg)] border border-[var(--border-strong)] rounded-[var(--radius-lg)] overflow-hidden relative z-10 flex flex-col shadow-2xl pointer-events-auto"
+                transition={spring}
+              >
+                {/* Header */}
+                <div className="flex justify-between items-start p-6 md:p-8 shrink-0 bg-[var(--surface)] border-b border-[var(--border)] relative z-20">
+                  <div>
+                    <motion.h2
+                      layoutId={`exp-title-${selectedExp.key}`}
+                      className="text-2xl md:text-4xl font-bold uppercase tracking-tight font-serif text-[var(--fg)]"
                     >
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                      </svg>
-                    </button>
+                      {selectedExp.title}
+                    </motion.h2>
+                    <motion.p 
+                       layoutId={`exp-desc-${selectedExp.key}`}
+                       className="text-[var(--fg-dim)] text-base font-sans mt-4 max-w-2xl leading-relaxed"
+                    >
+                       {selectedExp.description}
+                    </motion.p>
+                  </div>
+                  <button
+                    onClick={() => setSelectedExp(null)}
+                    className="text-[var(--fg-muted)] hover:text-[var(--accent)] transition-colors mono text-xs p-2 bg-[var(--bg)] rounded-full px-4 border border-[var(--border)] hover:border-[var(--accent)] shrink-0 ml-4"
+                  >
+                    FECHAR
+                  </button>
+                </div>
 
-                    <div className="p-6 h-full overflow-y-auto">
-                      <h3 className="text-2xl font-serif mb-6">{experiences[selectedExp.key].title}</h3>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        {experiences[selectedExp.key].photos.map((photo, index) => (
-                          <motion.div
-                            key={index}
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.2 + index * 0.1 }}
-                            className="relative aspect-[4/3] group"
-                          >
-                            <img
-                              src={photo.url}
-                              alt={photo.caption}
-                              className="w-full h-full object-cover rounded-lg shadow-lg"
-                            />
-                            {photo.caption && (
-                              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/0 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-lg">
-                                <p className="absolute bottom-0 left-0 right-0 p-4 text-sm text-white">
-                                  {photo.caption}
-                                </p>
-                              </div>
-                            )}
-                          </motion.div>
-                        ))}
-                      </div>
-                    </div>
-                  </motion.div>
+                {/* Content (Scrollable) */}
+                <motion.div
+                  className="flex-1 overflow-y-auto bg-[var(--bg)] relative"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ delay: 0.2 }}
+                >
+                   {/* Large Cover Image inside modal? No, photos grid */}
+                  <div className="p-6 md:p-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {selectedExp.photos.map((photo, index) => (
+                      <LazyImage
+                        key={index}
+                        src={photo.url}
+                        alt={photo.caption}
+                        caption={photo.caption}
+                        index={index}
+                        className="rounded-[var(--radius)]"
+                      />
+                    ))}
+                  </div>
                 </motion.div>
-              </div>
-            </>
+              </motion.div>
+            </div>
           )}
         </AnimatePresence>
       </div>

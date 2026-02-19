@@ -1,73 +1,81 @@
-import { ExternalLink } from 'lucide-react';
+import { ExternalLink, ArrowUp } from "lucide-react";
 
 export default function Footer() {
-  return (
-    <footer className="py-12 px-6 bg-slate-900">
-      <div className="container mx-auto max-w-4xl">
-        <div className="flex flex-col md:flex-row justify-between items-center mb-8">
-          <div className="text-3xl font-serif tracking-wider mb-4 md:mb-0">GHC</div>
-          
-          <div className="flex space-x-6">
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
-            <a 
-              href="https://www.instagram.com/gustavof.campos/" 
-              target="_blank" 
-              rel="noopener noreferrer" 
-              className="text-white hover:text-amber-300 transition-colors"
+  return (
+    <footer className="py-16 px-6 border-t-2 border-[var(--border)]">
+      <div className="container mx-auto max-w-5xl">
+        <div className="grid md:grid-cols-3 gap-8 items-center">
+          {/* Brand */}
+          <div>
+            <span className="text-3xl font-bold tracking-tighter text-[var(--fg)]">GHC</span>
+          </div>
+
+          {/* Center */}
+          <div className="text-center">
+            <p className="mono text-[10px] tracking-widest text-[var(--fg-muted)] uppercase">
+              © {new Date().getFullYear()} Gustavo Henrique França Campos
+            </p>
+            <p className="mono text-[10px] tracking-widest text-[var(--fg-muted)] uppercase mt-1">
+              Estudante de Direito — AFYA
+            </p>
+          </div>
+
+          {/* Links */}
+          <div className="flex items-center justify-end gap-4">
+            <a
+              href="https://www.instagram.com/gustavof.campos/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[var(--fg-muted)] hover:text-[var(--accent)] transition-colors"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
-                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
-                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="2" y="2" width="20" height="20" rx="0" ry="0" />
+                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
               </svg>
             </a>
-            <a 
-              href="#" 
-              target="_blank" 
-              rel="noopener noreferrer" 
-              className="text-white hover:text-amber-300 transition-colors"
+            <a
+              href="#"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[var(--fg-muted)] hover:text-[var(--accent)] transition-colors"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
-                <rect x="2" y="9" width="4" height="12"></rect>
-                <circle cx="4" cy="4" r="2"></circle>
-              </svg>  
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
+                <rect x="2" y="9" width="4" height="12" />
+                <circle cx="4" cy="4" r="2" />
+              </svg>
             </a>
+
+            <div className="w-[1px] h-4 bg-[var(--border)]" />
+
+            <button
+              onClick={scrollToTop}
+              className="text-[var(--fg-muted)] hover:text-[var(--accent)] transition-colors"
+              aria-label="Voltar ao topo"
+            >
+              <ArrowUp size={16} strokeWidth={2} />
+            </button>
           </div>
         </div>
-        
-        <div className="h-px w-full bg-slate-800 mb-8"></div>
-        
-        <div className="text-center text-sm opacity-60">
-          <p>&copy; {new Date().getFullYear()} Gustavo Henrique França Campos. Todos os direitos reservados.</p>
-          <p className="mt-2">Estudante de Direito na Faculdade Santo Agostinho - AFYA</p>
-        </div>
-        
-        <div className="mt-8 flex flex-col items-center space-y-4">
-          <div className="flex items-center space-x-2 text-amber-300">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <circle cx="12" cy="12" r="10"></circle>
-              <line x1="12" y1="8" x2="12" y2="12"></line>
-              <line x1="12" y1="16" x2="12.01" y2="16"></line>
-            </svg>
-            <span className="text-sm">Este portfolio é uma representação artística e profissional</span>
-          </div>
-          
-          <div className="text-sm text-slate-400">
-            Desenvolvido por{' '}
-            <a 
-              href="https://victordev.is-a.dev" 
-              target="_blank" 
-              rel="noopener noreferrer" 
-              className="text-amber-300 hover:text-amber-400 transition-colors group inline-flex items-center gap-1"
+
+        <div className="mt-12 pt-6 border-t border-[var(--border)] text-center">
+          <span className="mono text-[10px] text-[var(--fg-muted)] tracking-widest">
+            Desenvolvido por{" "}
+            <a
+              href="https://victordev.is-a.dev"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[var(--accent)] hover:text-[var(--fg)] transition-colors inline-flex items-center gap-1"
             >
               Victor Humberto
-              <ExternalLink 
-                size={14} 
-                className="opacity-60 group-hover:opacity-100 transition-opacity" 
-              />
+              <ExternalLink size={10} />
             </a>
-          </div>
+          </span>
         </div>
       </div>
     </footer>

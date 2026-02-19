@@ -14,6 +14,7 @@ import Inspiration from "@/components/sections/Inspiration";
 import PorqueDireito from "@/components/sections/PorqueDireito";
 import Places from "@/components/sections/Places";
 import EFConsultoria from "@/components/sections/EFConsultoria";
+import ScrollProgress from "@/components/ScrollProgress";
 
 export default function Home() {
   const [scrollPosition, setScrollPosition] = useState(0);
@@ -23,19 +24,14 @@ export default function Home() {
     smoothTime: 0.6,
   });
 
-  // Calculate opacity for hero background
   const bgOpacity = useTransform(
     scrollY,
-    [0, viewportHeight * 0.5], // Use state variable instead of window.innerHeight
+    [0, viewportHeight * 0.5],
     [1, 0],
   );
 
   useEffect(() => {
-    // Set viewport height after component mounts
     setViewportHeight(window.innerHeight);
-
-    // Add smooth scroll behavior to html element
-    document.documentElement.style.scrollBehavior = "smooth";
 
     const handleScroll = () => {
       setScrollPosition(window.scrollY);
@@ -51,17 +47,18 @@ export default function Home() {
     return () => {
       window.removeEventListener("scroll", handleScroll);
       window.removeEventListener("resize", handleResize);
-      document.documentElement.style.scrollBehavior = "auto";
     };
   }, []);
 
   return (
-    <div className="min-h-screen text-white bg-gray-950">
+    <div className="min-h-screen text-[var(--fg)] bg-[var(--bg)] noise-overlay">
+      <ScrollProgress />
       <motion.div
         className="fixed inset-0 bg-cover bg-center z-0"
         style={{
           backgroundImage: "url('/bg.jpg')",
           opacity: bgOpacity,
+          filter: "brightness(0.8)",
         }}
       />
       <div className="relative z-10">
@@ -75,6 +72,7 @@ export default function Home() {
         <Experiencias />
         <EFConsultoria />
         <Places />
+        <Contact />
         <Footer />
       </div>
     </div>
